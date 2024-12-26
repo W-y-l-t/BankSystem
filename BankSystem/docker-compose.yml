@@ -1,0 +1,33 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:17.2
+    hostname: postgres
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+
+  postgres-web:
+    depends_on:
+      - postgres
+    container_name: postgres_web
+    image: dpage/pgadmin4:latest
+    hostname: postgres-web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+      - PGADMIN_DEFAULT_EMAIL=postgres@postgres.com
+      - PGADMIN_CONFIG_SERVER_MODE=False
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
+
+volumes:
+    postgres_data:
